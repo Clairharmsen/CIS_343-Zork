@@ -24,9 +24,3 @@ std::ostream & operator <<(std::ostream & output, const Item & item)
 }
 
 
-int main()
-{
-    Item def("Banana", "The banana is a yellow fruit.", 50, 0.25);
-    std::cout << def;
-    return 0;
-}
