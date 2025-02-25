@@ -1,5 +1,5 @@
-\//Clair Harmsen
-//Add your name
+//Clair Harmsen
+//Ezekiel Turnbough
 
 #ifndef LOCATION_HPP
 #define LOCATION_HPP
@@ -23,14 +23,14 @@ class Location{
 
     friend std::ostream & operator <<(std::ostream & output, const Location& loc);
 
-    std::map<std::string, Location*> get_locations() const;
+    const std::map<std::string, Location*>& get_locations() const;
     void add_location(const std::string& direction, Location* location);
 
     void add_npc(const NPC& npc);
-    std::vector<NPC> get_npcs() const;
+    const std::vector<NPC>& get_npcs() const;
 
     void add_item(const Item& item);
-    std::vector<Item> get_items() const;
+    const std::vector<Item>& get_items() const;
 
     void set_visited();
 

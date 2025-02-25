@@ -25,21 +25,6 @@ public:
     std::string GetName() const {return name;}
     std::string GetDescription() const {return description;}
     std::string GetMessage();
-
-    void SetName(const std::string& n)
-    {
-        if (n.size() <= 0) {
-            throw std::invalid_argument("NPC name cannot be empty");
-        }
-        name = n;
-    }
-    void SetDescription(const std::string& d) {
-        if (d.size()<= 0) {
-            throw std::invalid_argument("NPC description cannot be empty");
-        }
-        description = d;
-    }
-
     void SetMessage(const std::string& m);
 
 };

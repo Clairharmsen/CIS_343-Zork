@@ -11,8 +11,14 @@
 
 NPC::NPC(const std::string& n, const std::string& d)
 {
-    SetName(n);
-    SetDescription(d);
+    if (n.size() <= 0) {
+        throw std::invalid_argument("NPC name cannot be empty");
+    }
+    name = n;
+    if (d.size()<= 0) {
+        throw std::invalid_argument("NPC description cannot be empty");
+    }
+    description = d;
 }
 
 std::string NPC::GetMessage()

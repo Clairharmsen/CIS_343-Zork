@@ -1,5 +1,5 @@
 //Clair Harmsen
-//Add your name
+//Ezekiel Turnbough
 
 #include "location.hpp"
 #include "Item.hpp"
@@ -10,14 +10,14 @@
 #include <vector>
 #include <map>
 
-Location::Location(std::string n, std::string d)
- : name(n), desc(d), visited(false){}
+Location::Location(const std::string & n, const std::string& d)
+: name(n), desc(d), visited(false){}
 
 const std::map<std::string, Location*>& Location::get_locations() const{
     return neighbors;
 }
 
-void Location::add_location(std::string dir, Location* location){
+void Location::add_location(const std::string &dir, Location* location){
     if  (dir.empty()){
         throw std::invalid_argument("Please enter a direction");
     }
@@ -30,19 +30,19 @@ void Location::add_location(std::string dir, Location* location){
     neighbors[dir] = location;
 }
 
-void Location::add_npc(NPC npc){
+void Location::add_npc(const NPC & npc){
     npcs.push_back(npc);
 }
 
-const std::vector<NPC> Location::get_npcs() const{
+const std::vector<NPC>& Location::get_npcs() const{
     return npcs;
 }
 
-void Location::add_items(Item item){
+void Location::add_item(const Item & item){
     items.push_back(item);
 }
 
-const std::vector<Item> Location::get_items() const{
+const std::vector<Item>& Location::get_items() const{
     return items;
 }
 
@@ -54,7 +54,7 @@ bool Location::get_visited() const{
     return visited;
 }
 
-std::ostream & operator <<(std::ostream & output, Location & location){
+std::ostream & operator <<(std::ostream & output, const Location & location){
 
         output << location.GetName() << " - " << location.GetDesc() << "\n";
         output << "You see the following NPCs:\n";
