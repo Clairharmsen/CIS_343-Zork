@@ -66,9 +66,10 @@ Location* Game::RandomLocation() {
 }
 
 //Used ChatGPT to help with the descriptions, separating the elements into regions and connecting the regions.
+//Descriptions were proofread for accuracy.
 void Game::CreateWorld() {
     // ====================== MACKINAC HALL ======================
-    Location kirkhoff_center("Kirkhoff Upstairs", "The student union. There are restaurants, "
+    Location kirkhoff_center("Kirkhoff Center", "The student union. There are restaurants, "
                                                   "a store, and places to congregate.");
 
     NPC barista("Barista", "A friendly barista who makes excellent coffee.");
@@ -83,7 +84,8 @@ void Game::CreateWorld() {
     kirkhoff_center.add_item(coffee);
 
     // ====================== MACKINAC HALL ======================
-    Location mackinac_hall("Mackinac Hall", "A large academic building filled with classrooms and offices.");
+    Location mackinac_hall("Mackinac Hall", "A large academic building "
+                                            "filled with classrooms and offices.");
 
     NPC teacher("Teacher", "A professor who loves teaching computer science.");
     teacher.SetMessage("Remember to submit your homework before midnight!");
@@ -107,9 +109,9 @@ void Game::CreateWorld() {
     rec_center.add_item(weight);
 
     // ====================== BLUE CONNECTION ======================
-    Location blue_connection("Blue Connection", "A dining area with various food options.");
+    Location blue_connection("Blue Connection", "A dining area helpful for late night snacks.");
 
-    Item chicken("Grilled Chicken", "A well-seasoned grilled chicken breast.", 220, 3.5);
+    Item chicken("Grilled Chicken", "A well-seasoned grilled chicken breast.", 420, 5.5);
     Item chips("Chips", "A bag of salty, crunchy potato chips.", 320, 0.5);
     blue_connection.add_item(chicken);
     blue_connection.add_item(chips);
@@ -123,14 +125,14 @@ void Game::CreateWorld() {
     // ====================== CALDER HALL ======================
     Location calder_hall("Calder Hall", "A residential hall for students.");
 
-    NPC janitor("Janitor", "A hardworking staff member who keeps the dorms clean.");
+    NPC janitor("Janitor", "A hardworking staff member who keeps the campus clean.");
     janitor.SetMessage("Please don’t leave your trash in the hallways.");
     janitor.SetMessage("I’ve been here for 20 years, and I’ve seen it all.");
     janitor.SetMessage("Some students don’t appreciate the work we do.");
     calder_hall.add_npc(janitor);
 
     // ====================== MANITOU HALL ======================
-    Location manitou_hall("Manitou Hall", "An academic building home to many lecture halls.");
+    Location manitou_hall("Manitou Hall", "An academic building with a large computer lab.");
 
     Item computer("Laptop", "A high-end laptop used for coding and assignments.", 0, 24.5);
     manitou_hall.add_item(computer);
