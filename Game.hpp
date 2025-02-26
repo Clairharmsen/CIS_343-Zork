@@ -22,6 +22,8 @@ private:
     int player_weight = 0;
     bool playing;
     Location* current_location;
+    std::vector<Item> items;
+    std::vector<Location> locations;
 
 public:
     Game();

@@ -14,12 +14,15 @@ Game::Game(){
     current_location = RandomLocation();
 }
 
+//Clair
 void Game::ShowHelp() {
 }
 
+//Clair
 void Game::Go(std::vector<std::string> target) {
 }
 
+//Clair
 void Game::Talk(std::vector<std::string> target) {
 }
 
@@ -29,12 +32,14 @@ void Game::Give(std::vector<std::string> target) {
 void Game::Look(std::vector<std::string> target) {
 }
 
+//Clair
 void Game::Quit(std::vector<std::string> target) {
 }
 
 void Game::Take(std::vector<std::string> target) {
 }
 
+//Clair
 void Game::ShowItem(std::vector<std::string> target) {
 }
 
@@ -51,6 +56,7 @@ std::map<std::string, std::function<void(std::vector<std::string>)>> Game::Setup
     return all_commands;
 }
 
+//Clair
 Location* Game::RandomLocation() {
 
 }
