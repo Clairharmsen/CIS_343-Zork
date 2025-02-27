@@ -18,8 +18,23 @@ Game::Game(){
     current_location = RandomLocation();
 }
 
-//Clair
+//Used ChatGPT to help with the show time part
 void Game::ShowHelp() {
+    std::time_t now = std::time(nullptr);
+    std::tm* local_time = std::localtime(&now);
+
+    std::cout << "\nCurrent time: " << std::put_time(local_time, "%I:%M:%S %p") << std::endl;
+
+    std::cout << "======Help Menu======\n";
+    std::cout << "Goal of the game:\n You need to bring 500 calories of edible food\n" <<
+    "to the elf in the woods behind campus. Once the elf has 500 calories of edible food it will save campus\n" <<
+    "You may only carry 30 pounds at a time\n";
+
+    std::cout << "You may use the following commands:\n";
+
+    for (const auto& command : commands){
+        std::cout << command.first << "\n";
+    }
 }
 
 //Clair
