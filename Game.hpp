@@ -27,13 +27,13 @@ private:
 
 public:
     Game();
-    void Start();
+    void Play();
     std::map<std::string, std::function<void(std::vector<std::string>)>> commands;
     void CreateWorld();
 
     void ShowHelp();
     void Go(std::vector<std::string> target);
-    void Talk(std::vector<std::string> target);
+    void Meet(std::vector<std::string> target);
     void Give(std::vector<std::string> target);
     void Look(std::vector<std::string> target);
     void Quit(std::vector<std::string> target);

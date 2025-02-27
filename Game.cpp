@@ -7,6 +7,8 @@
 #include "Game.hpp"
 #include <iostream>
 #include <iomanip>
+#include <numeric>
+#include <algorithm>
 
 
 Game::Game(){
@@ -25,7 +27,7 @@ void Game::Go(std::vector<std::string> target) {
 }
 
 //Clair
-void Game::Talk(std::vector<std::string> target) {
+void Game::Meet(std::vector<std::string> target) {
 }
 
 void Game::Give(std::vector<std::string> target) {
@@ -41,6 +43,7 @@ void Game::Quit(std::vector<std::string> target) {
 }
 
 void Game::Take(std::vector<std::string> target) {
+
 }
 
 //Clair
@@ -51,7 +54,7 @@ void Game::ShowItem(std::vector<std::string> target) {
 std::map<std::string, std::function<void(std::vector<std::string>)>> Game::SetupCommands() {
     std::map<std::string, std::function<void(std::vector<std::string>)>> all_commands;
     all_commands["help"] = [this](std::vector<std::string> args) { ShowHelp(); };
-    all_commands["talk"] = [this](std::vector<std::string> args) { Talk(args); };
+    all_commands["meet"] = [this](std::vector<std::string> args) { Meet(args); };
     all_commands["take"] = [this](std::vector<std::string> args) { Take(args); };
     all_commands["give"] = [this](std::vector<std::string> args) { Give(args); };
     all_commands["go"] = [this](std::vector<std::string> args) { Go(args); };
@@ -172,11 +175,15 @@ void Game::CreateWorld() {
     calder_hall.add_location("north", &kirkhoff_center);
 
     manitou_hall.add_location("south", &mackinac_hall);
-}
 
-
-void Game::Start() {
-
+    locations.push_back(kirkhoff_center);
+    locations.push_back(mackinac_hall);
+    locations.push_back(rec_center);
+    locations.push_back(blue_connection);
+    locations.push_back(kleiner);
+    locations.push_back(calder_hall);
+    locations.push_back(manitou_hall);
+    locations.push_back(fresh);
 }
 
 //splits a given string into a vector of strings seperated by spaces
@@ -191,4 +198,60 @@ std::vector < std::string > Split(std::string text) {
     sentence_split.at(sentence_split.size() - 1).pop_back();
     // removes the final space of the vector
     return sentence_split;
+}
+
+void Game::Play() {
+    std::cout << "Welcome to Grand Valley's Zork Experience" << std::endl;
+    std::cout << "Your goal is to gather enough food to feed an elf in need." << std::endl;
+    std::cout << "You have 10 turns to do so" << std::endl;
+    std::cout << "You must explore the campus and gather 500 calories worth of food to help the elf" << std::endl;
+    int num_turns = 10;
+
+    while (playing) {
+        std::cout << "You are currently at: " << *current_location << std::endl;
+        std::cout << "What is your command? " << std::endl;
+        std::string input;
+
+        std::getline(std::cin, input);
+
+        // Split input into words
+        std::vector<std::string> tokens = Split(input);
+
+        // Ensure input is not empty
+        if (tokens.empty()) {
+            std::cout << "Invalid input. Please enter a command.\n";
+            continue;
+        }
+
+        // Extract command and target
+        std::string command = tokens[0];
+        tokens.erase(tokens.begin()); // Remove first word
+        std::string target;
+        for (int i = 0; i < tokens.size(); i++) {
+            target += tokens[i];
+        }
+        //std::string target = std::accumulate(tokens); // Join remaining words into a string
+
+        // Execute command if found
+        if (commands.find(command) != commands.end()) {
+            commands[command](tokens);
+            num_turns--;
+        } else {
+            std::cout << "Unknown command: " << command << "\n";
+        }
+
+        if (num_turns <= 0) {
+            playing = false;
+        }
+    }
+
+    // ========================= Game End Conditions =========================
+    if (calories_needed <= 0) {
+        std::cout << "Congratulations! You ate enough food and won the game!\n";
+        playing = false;
+
+    } else {
+        std::cout << "You didn't consume enough calories. Game over.\n";
+        playing = false;
+    }
 }
