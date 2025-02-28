@@ -42,7 +42,7 @@ void Location::add_item(const Item & item){
     items.push_back(item);
 }
 
-const std::vector<Item>& Location::get_items() const{
+std::vector<Item>& Location::get_items(){
     return items;
 }
 
@@ -54,7 +54,7 @@ bool Location::get_visited() const{
     return visited;
 }
 
-std::ostream & operator <<(std::ostream & output, const Location & location){
+std::ostream & operator <<(std::ostream & output,  Location & location){
 
         output << location.GetName() << " - " << location.GetDesc() << "\n";
         output << "You see the following NPCs:\n";
@@ -71,7 +71,7 @@ std::ostream & operator <<(std::ostream & output, const Location & location){
         if (location.get_items().empty()) {
                 output << " - None\n";
         } else {
-                for (const auto& item: location.get_items()) {
+                for (auto& item: location.get_items()) {
                         output << " - " << item.GetName() << " (" << item.GetCalories() << " calories) - " << item.GetWeight() << " lb - " << item.GetDescription() << "\n";
                 }
         }

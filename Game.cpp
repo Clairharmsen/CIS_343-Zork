@@ -20,6 +20,12 @@ Game::Game(){
     current_location = RandomLocation();
 }
 
+void Strip(std::string &word) {
+    if (word.at(word.size() - 1) == ' ') {
+        word.erase(word.end() - 1);
+    }
+}
+
 //Used ChatGPT to help with the show time part
 void Game::ShowHelp() {
     std::time_t now = std::time(nullptr);
@@ -131,9 +137,32 @@ void Game::Quit(std::vector<std::string> target) {
 }
 
 void Game::Take(std::vector<std::string> target) {
+    if (target.empty()) {
+        std::cout << "Take what?\n";
+        return;
+    }
 
+    std::string item_name = target[0]; // Assumes the item name is a single word
+    Strip(item_name);
+
+    // Get a reference to the location's item list
+    std::vector<Item>& items_list = current_location->get_items();
+
+    // Loop through the items in the current location
+    for (auto it = items_list.begin(); it != items_list.end(); ++it) {
+        if (it->GetName() == item_name) {
+            // Add item to player's inventory
+            items.push_back(*it);
+            player_weight += it->GetWeight();
+
+            // Remove item from the location's inventory
+            items_list.erase(it);
+
+            std::cout << "You picked up the " << item_name << ".\n";
+            return;
+        }
+    }
 }
-
 //Clair
 void Game::ShowItem(std::vector<std::string> target) {
 
@@ -299,12 +328,6 @@ std::vector < std::string > Split(std::string text) {
     sentence_split.at(sentence_split.size() - 1).pop_back();
     // removes the final space of the vector
     return sentence_split;
-}
-
-void Strip(std::string &word) {
-    if (word.at(word.size() - 1) == ' ') {
-        word.erase(word.end() - 1);
-    }
 }
 
 void Game::Play() {
