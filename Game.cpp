@@ -95,6 +95,7 @@ void Game::Give(std::vector<std::string> target) {
     if (it != items.end()){
         if (it->GetCalories() > 0) {
             calories_needed -= it->GetCalories();
+            player_weight -= it->GetCalories();
             std::cout << "The elf ate the " << it->GetName() << "\n";
             std::cout << "The elf needs " << calories_needed << "more calories\n";
             items.erase(it);
