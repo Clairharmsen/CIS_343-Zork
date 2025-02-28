@@ -193,6 +193,7 @@ std::map<std::string, std::function<void(std::vector<std::string>)>> Game::Setup
     all_commands["look"] = [this](std::vector<std::string> args) { Look(args); };
     all_commands["quit"] = [this](std::vector<std::string> args) { Quit(args); };
     all_commands["eat"] = [this](std::vector<std::string> args) { Eat(args); };
+    all_commands["show"] = [this](std::vector<std::string> args) { ShowItem(args); };
     return all_commands;
 }
 
