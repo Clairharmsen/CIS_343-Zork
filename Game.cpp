@@ -19,12 +19,22 @@ Game::Game(){
     playing = true;
     current_location = RandomLocation();
 }
+//used ChatGPT to help with transform line
+std::string LowerCase(const std::string& input) {
+    std::string result = input;
+    std::transform(result.begin(), result.end(), result.begin(), ::tolower);
+    return result;
+}
 
 void Strip(std::string &word) {
-    if (word.at(word.size() - 1) == ' ') {
-        word.erase(word.end() - 1);
+    while (!word.empty() && word.back() == ' ') {
+        word.pop_back();
+    }
+    while (!word.empty() && word.front() == ' ') {
+        word.erase(word.begin());
     }
 }
+
 
 //Used ChatGPT to help with the show time part
 void Game::ShowHelp() {
@@ -97,7 +107,7 @@ void Game::Give(std::vector<std::string> target) {
             calories_needed -= it->GetCalories();
             player_weight -= it->GetCalories();
             std::cout << "The elf ate the " << it->GetName() << "\n";
-            std::cout << "The elf needs " << calories_needed << "more calories\n";
+            std::cout << "The elf needs " << calories_needed << " more calories\n";
             items.erase(it);
         }
         else {
@@ -432,6 +442,8 @@ void Game::Play() {
         std::string input;
 
         std::getline(std::cin, input);
+
+        input = LowerCase(input);
 
         // Split input into words
         std::vector<std::string> tokens = Split(input);
