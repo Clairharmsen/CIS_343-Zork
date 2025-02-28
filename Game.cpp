@@ -1,6 +1,6 @@
 //
 // Ezekiel Turnbough
-// Add your name
+// Clair Harmsen
 //
 
 #include <ctime>
@@ -9,6 +9,7 @@
 #include <iomanip>
 #include <numeric>
 #include <algorithm>
+#include <cstdlib>
 
 
 Game::Game(){
@@ -32,17 +33,52 @@ void Game::ShowHelp() {
 
     std::cout << "You may use the following commands:\n";
 
-    for (const auto& command : commands){
+    for (const command& command : commands){
         std::cout << command.first << "\n";
     }
 }
 
 //Clair
 void Game::Go(std::vector<std::string> target) {
+    if (target.empty()){
+      std::cout << "Where would you like to go?\n";
+      return;
+    }
+
+    std::string direction = target[0];
+
+    if (current_weight > 30){
+      std::cout << "You cannot move when you are carrying more than 30 pounds\n";
+      return;
+    }
+
+    std::map<std::string, Location> neighbors = current_location.get_locations();
+
+    if (neighbors.find(direction) != neighbors.end()){
+      current_location = neighbors[direction];
+
+      current_location.set_visited(true);
+
+      std::cout << "You are now at: " << current_location << "\n";
+    }
+    else {
+      std::cout << "You cannot move in that direction\n";
+      }
 }
+
 
 //Clair
 void Game::Meet(std::vector<std::string> target) {
+  std::vector<NPC> npcs = current_location->get_npcs();
+
+  if(npcs.empty()){
+    std::cout << "There is no one else here\n";
+  return;}
+
+  std::cout << "You see the following person\n";
+  for (const auto& npc : npcs){
+    std::cout << npc.get_name() << " - " << npc.get_description() << "\n";
+  }
 }
 
 void Game::Give(std::vector<std::string> target) {
@@ -53,8 +89,9 @@ void Game::Give(std::vector<std::string> target) {
 void Game::Look(std::vector<std::string> target) {
 }
 
-//Clair
 void Game::Quit(std::vector<std::string> target) {
+    std::cout << "Thanks for playing!\n";
+    playing = false;
 }
 
 void Game::Take(std::vector<std::string> target) {
@@ -75,12 +112,19 @@ std::map<std::string, std::function<void(std::vector<std::string>)>> Game::Setup
     all_commands["go"] = [this](std::vector<std::string> args) { Go(args); };
     all_commands["look"] = [this](std::vector<std::string> args) { Look(args); };
     all_commands["quit"] = [this](std::vector<std::string> args) { Quit(args); };
+    all_commands["eat"] = [this](std::vector<std::string> args) { Eat(args); };
     return all_commands;
 }
 
-//Clair
+//Used Chatgpt to help with random seeding logic
 Location* Game::RandomLocation() {
-
+  static bool seeded = false;
+  if (!seeded){
+    std::srand(std::time(nullptr));
+    seeded = true;
+  }
+    int random_index = std::rand() % locations.size();
+    return locations[random_index];
 }
 
 //Used ChatGPT to help with the descriptions, separating the elements into regions and connecting the regions.
