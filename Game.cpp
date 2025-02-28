@@ -10,6 +10,7 @@
 #include <numeric>
 #include <algorithm>
 #include <cstdlib>
+#include <string>
 
 
 Game::Game(){
@@ -59,7 +60,7 @@ void Game::Go(std::vector<std::string> target) {
 
       current_location->set_visited();
 
-      std::cout << "You are now at: " << current_location << "\n";
+      std::cout << "You are now at: " << *current_location << "\n";
     }
     else {
       std::cout << "You cannot move in that direction\n";
@@ -264,6 +265,12 @@ std::vector < std::string > Split(std::string text) {
     return sentence_split;
 }
 
+void Strip(std::string &word) {
+    if (word.at(word.size() - 1) == ' ') {
+        word.erase(word.end() - 1);
+    }
+}
+
 void Game::Play() {
     std::cout << "Welcome to Grand Valley's Zork Experience" << std::endl;
     std::cout << "Your goal is to gather enough food to feed an elf in need." << std::endl;
@@ -289,6 +296,7 @@ void Game::Play() {
 
         // Extract command and target
         std::string command = tokens[0];
+        Strip(command);
         tokens.erase(tokens.begin()); // Remove first word
         std::string target;
         for (int i = 0; i < tokens.size(); i++) {
@@ -319,3 +327,4 @@ void Game::Play() {
         playing = false;
     }
 }
+
