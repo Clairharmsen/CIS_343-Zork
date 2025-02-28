@@ -203,6 +203,40 @@ void Game::ShowItem(std::vector<std::string> target) {
     std::cout << "Total weight you are carrying is: " << total_weight << "\n";
 }
 
+void Game::Drop(std::vector<std::string> target){
+    if (items.empty()) {
+        std::cout << "You have no items to drop. \n";
+        return;
+    }
+
+    if (target.empty()) {  // Check if an item name was provided
+        std::cout << "Drop what?\n";
+        return;
+    }
+
+    std::string item_name = target[0]; // Assumes the item name is a single word
+    Strip(item_name);
+
+    // Get a reference to the location's item list
+    std::vector<Item>& items_list = current_location->get_items();
+
+    // Loop through the items you currently have
+    for (auto it = items.begin(); it != items.end(); ++it) {
+        if (it->GetName() == item_name) {
+            // Remove item to player's inventory
+            player_weight -= it->GetWeight();
+            current_location->add_item(*it);
+
+            // Remove item from the location's inventory
+            items.erase(it);
+
+            std::cout << "You dropped the " << item_name << " at " << current_location << ".\n";
+            return;
+        }
+    }
+}
+
+
 // Used ChatGPT to help with the show commands function
 std::map<std::string, std::function<void(std::vector<std::string>)>> Game::SetupCommands() {
     std::map<std::string, std::function<void(std::vector<std::string>)>> all_commands;
@@ -215,6 +249,7 @@ std::map<std::string, std::function<void(std::vector<std::string>)>> Game::Setup
     all_commands["quit"] = [this](std::vector<std::string> args) { Quit(args); };
     all_commands["eat"] = [this](std::vector<std::string> args) { Eat(args); };
     all_commands["show"] = [this](std::vector<std::string> args) { ShowItem(args); };
+    all_commands["drop"] = [this](std::vector<std::string> args) { Drop(args); };
     return all_commands;
 }
 

@@ -40,6 +40,7 @@ public:
     void Take(std::vector<std::string> target);
     void ShowItem(std::vector<std::string> target);
     void Eat(std::vector<std::string> target);
+    void Drop(std::vector<std::string> target);
     Location* RandomLocation();
 
 
