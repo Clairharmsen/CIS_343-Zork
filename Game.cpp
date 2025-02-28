@@ -290,11 +290,11 @@ void Game::Eat(std::vector<std::string> target) {
 //Used ChatGPT to help with the descriptions, separating the elements into regions and connecting the regions.
 //Descriptions were proofread for accuracy.
 void Game::CreateWorld() {
-    // ====================== MACKINAC HALL ======================
+    // ====================== KIRKHOFF CENTER ======================
     Location kirkhoff_center("Kirkhoff Center", "The student union. There are restaurants, "
-                                                  "a store, and places to congregate.");
+                                                  "a store, and places to congregate. ");
 
-    NPC barista("Barista", "A friendly barista who makes excellent coffee.");
+    NPC barista("Barista", "A friendly barista who make excellent coffee.");
     barista.SetMessage("Welcome to the coffee shop! What can I get for you?");
     barista.SetMessage("We're running a special on pumpkin spice lattes today!");
     barista.SetMessage("Long line today, huh? Everyone wants their caffeine fix.");
@@ -309,7 +309,7 @@ void Game::CreateWorld() {
     Location mackinac_hall("Mackinac Hall", "A large academic building "
                                             "filled with classrooms and offices.");
 
-    NPC teacher("Teacher", "A professor who loves teaching computer science.");
+    NPC teacher("Teacher", "A professor who loves teaching and interacting with students.");
     teacher.SetMessage("Remember to submit your homework before midnight!");
     teacher.SetMessage("Coding is like magic, but with logic.");
     teacher.SetMessage("Need help with your project? Office hours are on Tuesdays.");
@@ -319,27 +319,28 @@ void Game::CreateWorld() {
     mackinac_hall.add_item(apple);
 
     // ====================== REC CENTER ======================
-    Location rec_center("Rec Center", "The campus fitness center, where students can work out.");
+    Location rec_center("Rec Center", "The campus fitness center, where students can work out "
+                                      "and play sports.");
 
-    NPC athlete("Athlete", "A student who spends most of their time training in the gym.");
+    NPC athlete("Athlete", "A student who spends most of their time training at the gym.");
     athlete.SetMessage("Gotta keep pushing! Gains don’t come easy.");
     athlete.SetMessage("Hydration is key. Always drink plenty of water.");
     athlete.SetMessage("I benched 225 today! How about you?");
     rec_center.add_npc(athlete);
 
-    Item weight("Dumbbell", "A heavy dumbbell used for strength training.", 0, 10);
+    Item weight("Dumbbell", "A heavy dumbbell used for strength training", 0, 12);
     rec_center.add_item(weight);
 
     // ====================== BLUE CONNECTION ======================
     Location blue_connection("Blue Connection", "A dining area helpful for late night snacks.");
 
-    Item chicken("Grilled Chicken", "A well-seasoned grilled chicken breast.", 420, 5.5);
+    Item chicken("GrilledChicken", "A well-seasoned grilled chicken breast.", 420, 5.5);
     Item chips("Chips", "A bag of salty, crunchy potato chips.", 320, 0.5);
     blue_connection.add_item(chicken);
     blue_connection.add_item(chips);
 
     // ====================== KLEINER ======================
-    Location kleiner("Kleiner", "A smaller dining hall and study space.");
+    Location kleiner("Kleiner", "A smaller dining hall and study space");
 
     Item book("Textbook", "A heavy textbook full of knowledge.", 0, 8.5);
     kleiner.add_item(book);
