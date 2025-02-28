@@ -178,8 +178,26 @@ Location* Game::RandomLocation() {
     return &locations[random_index];
 }
 
+//Used ChatGPT to help with the finding item in inventory loop
 void Game::Eat(std::vector<std::string> target) {
+    std::string input;
+    std::cout << "What item would you like to eat?";
+    std::getline(std::cin, input);
 
+    auto it = std::find_if(items.begin(), items.end(),
+        [&](const Item& item) { return item.GetName() == input; });
+
+    if (it != items.end()){
+        if (it->GetCalories() > 0) {
+            std::cout << "You ate the " << it->GetName() << "\n";
+            items.erase(it);
+            }
+        else {
+            std::cout << "That item is not edible\n";}
+            }
+    else {
+            std::cout << "You don't have that item\n";
+    }
 }
 
 
