@@ -33,7 +33,7 @@ void Game::ShowHelp() {
 
     std::cout << "You may use the following commands:\n";
 
-    for (const command& command : commands){
+    for (const auto& command : commands){
         std::cout << command.first << "\n";
     }
 }
@@ -47,17 +47,17 @@ void Game::Go(std::vector<std::string> target) {
 
     std::string direction = target[0];
 
-    if (current_weight > 30){
+    if (player_weight > 30){
       std::cout << "You cannot move when you are carrying more than 30 pounds\n";
       return;
     }
 
-    std::map<std::string, Location> neighbors = current_location.get_locations();
+    std::map<std::string, Location*> neighbors = current_location->get_locations();
 
     if (neighbors.find(direction) != neighbors.end()){
       current_location = neighbors[direction];
 
-      current_location.set_visited(true);
+      current_location->set_visited();
 
       std::cout << "You are now at: " << current_location << "\n";
     }
@@ -77,7 +77,7 @@ void Game::Meet(std::vector<std::string> target) {
 
   std::cout << "You see the following person\n";
   for (const auto& npc : npcs){
-    std::cout << npc.get_name() << " - " << npc.get_description() << "\n";
+    std::cout << npc.GetName() << " - " << npc.GetDescription() << "\n";
   }
 }
 
@@ -124,8 +124,13 @@ Location* Game::RandomLocation() {
     seeded = true;
   }
     int random_index = std::rand() % locations.size();
-    return locations[random_index];
+    return &locations[random_index];
 }
+
+void Game::Eat(std::vector<std::string> target) {
+
+}
+
 
 //Used ChatGPT to help with the descriptions, separating the elements into regions and connecting the regions.
 //Descriptions were proofread for accuracy.
