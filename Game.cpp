@@ -89,9 +89,29 @@ void Game::Meet(std::vector<std::string> target) {
 }
 
 void Game::Give(std::vector<std::string> target) {
+    auto it = std::find_if(items.begin(), items.end(),
+        [&](const Item& item) { return item.GetName() == target[0]; });
 
-
+    if (it != items.end()){
+        if (it->GetCalories() > 0) {
+            calories_needed -= it->GetCalories();
+            std::cout << "The elf ate the " << it->GetName() << "\n";
+            std::cout << "The elf needs " << calories_needed << "more calories\n";
+            items.erase(it);
+        }
+        else {
+            std::cout << "That item is not edible\n";
+            std::cout << "The elf got angry and sent you to a different place.\n";
+            current_location = RandomLocation();
+        }
+    }
+    else {
+        std::cout << "You don't have that item\n";
+    }
 }
+
+
+
 
 void Game::Look(std::vector<std::string> target) {
     std::cout << "You are currently at: " << *current_location << std::endl;
