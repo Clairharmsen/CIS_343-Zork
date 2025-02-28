@@ -21,7 +21,7 @@ class Location{
     void SetName(std::string n) {name = n;}
     void SetDesc(std::string d) {desc = d;}
 
-    friend std::ostream & operator <<(std::ostream & output, const Location& loc);
+    friend std::ostream & operator <<(std::ostream & output,  Location& loc);
 
     const std::map<std::string, Location*>& get_locations() const;
     void add_location(const std::string& direction, Location* location);
@@ -30,7 +30,7 @@ class Location{
     const std::vector<NPC>& get_npcs() const;
 
     void add_item(const Item& item);
-    const std::vector<Item>& get_items() const;
+    std::vector<Item>& get_items() ;
 
     void set_visited();
 
