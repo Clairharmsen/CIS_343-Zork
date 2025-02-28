@@ -136,7 +136,21 @@ void Game::Take(std::vector<std::string> target) {
 
 //Clair
 void Game::ShowItem(std::vector<std::string> target) {
+    std::cout << "You are carrying the following items:\n";
 
+    if (items.empty()) {
+        std::cout << "You have no items\n";
+        return;
+    }
+    for (const auto& item : items) {
+        std::cout << item.GetName() << ", weight: " << item.GetWeight() << "\n";
+    }
+
+    float total_weight = 0;
+    for (const auto& item : items) {
+        total_weight += item.GetWeight();
+    }
+    std::cout << "Total weight you are carrying is: " << total_weight << "\n";
 }
 
 // Used ChatGPT to help with the show commands function
