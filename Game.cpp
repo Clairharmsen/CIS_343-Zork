@@ -56,7 +56,7 @@ void Game::Go(std::vector<std::string> target) {
     std::map<std::string, Location*> neighbors = current_location->get_locations();
 
     if (neighbors.find(direction) != neighbors.end()){
-      current_location = neighbors[direction];
+      current_location =  neighbors[direction];
 
       current_location->set_visited();
 
@@ -88,6 +88,41 @@ void Game::Give(std::vector<std::string> target) {
 }
 
 void Game::Look(std::vector<std::string> target) {
+    std::cout << "You are currently at: " << *current_location << std::endl;
+    std::vector<NPC> npcs = current_location->get_npcs();
+    std::vector<Item> items = current_location->get_items();
+
+    if(npcs.empty()){
+        std::cout << "You are alone.\n";
+        return;}
+
+    std::cout << "You see the following people\n";
+    for (const auto& npc : npcs){
+        std::cout << npc.GetName() << "\n";
+    }
+
+    if(items.empty()){
+        std::cout << "The room has no items to grab.\n";
+        return;}
+
+    std::cout << "You see the following items\n";
+    for (const auto& it : items){
+        std::cout << it.GetName() << "\n";
+    }
+
+    const std::map<std::string, Location*>& neighbors = current_location->get_locations();
+
+    std::cout << "You can go in the following directions:\n";
+    for (const auto& entry : neighbors) {
+        std::string direction = entry.first;
+
+        // Check if location has been visited before
+        if (entry.second->get_visited()) {
+            std::cout << "- " << direction << " (" << entry.first << ")\n";
+        } else {
+            std::cout << "- " << direction << "\n";
+        }
+    }
 }
 
 void Game::Quit(std::vector<std::string> target) {
@@ -101,6 +136,7 @@ void Game::Take(std::vector<std::string> target) {
 
 //Clair
 void Game::ShowItem(std::vector<std::string> target) {
+
 }
 
 // Used ChatGPT to help with the show commands function
