@@ -75,6 +75,7 @@ void Game::Go(std::vector<std::string> target) {
     else {
       std::cout << "You cannot move in that direction\n";
       }
+    std::cout << "************************ END OF TURN ********************************** \n" << std::endl;
 }
 
 
@@ -90,6 +91,7 @@ void Game::Meet(std::vector<std::string> target) {
   for (const auto& npc : npcs){
     std::cout << npc.GetName() << " - " << npc.GetDescription() << "\n";
   }
+    std::cout << "************************ END OF TURN ********************************** \n" << std::endl;
 }
 
 void Game::Give(std::vector<std::string> target) {
@@ -102,16 +104,19 @@ void Game::Give(std::vector<std::string> target) {
             player_weight -= it->GetCalories();
             std::cout << "The elf ate the " << it->GetName() << "\n";
             std::cout << "The elf needs " << calories_needed << " more calories\n";
+            std::cout << "************************ END OF TURN ********************************** \n" << std::endl;
             items.erase(it);
         }
         else {
             std::cout << "That item is not edible\n";
             std::cout << "The elf got angry and sent you to a different place.\n";
+            std::cout << "************************ END OF TURN ********************************** \n" << std::endl;
             current_location = RandomLocation();
         }
     }
     else {
         std::cout << "You don't have that item\n";
+        std::cout << "************************ END OF TURN ********************************** \n" << std::endl;
     }
 }
 
@@ -184,6 +189,7 @@ void Game::Take(std::vector<std::string> target) {
             items_list.erase(it);
 
             std::cout << "You picked up the " << item_name << ".\n";
+            std::cout << "************************ END OF TURN ********************************** \n" << std::endl;
             return;
         }
     }
@@ -205,6 +211,8 @@ void Game::ShowItem(std::vector<std::string> target) {
         total_weight += item.GetWeight();
     }
     std::cout << "Total weight you are carrying is: " << total_weight << "\n";
+    std::cout << "************************ END OF TURN ********************************** \n" << std::endl;
+
 }
 
 void Game::Drop(std::vector<std::string> target){
@@ -235,6 +243,7 @@ void Game::Drop(std::vector<std::string> target){
             items.erase(it);
 
             std::cout << "You dropped the " << item_name << " at " << current_location << ".\n";
+            std::cout << "************************ END OF TURN ********************************** \n" << std::endl;
             return;
         }
     }
@@ -438,10 +447,11 @@ void Game::Play() {
     std::cout << "Your goal is to gather enough food to feed an elf in need." << std::endl;
     std::cout << "You have 10 turns to do so" << std::endl;
     std::cout << "You must explore the campus and gather 500 calories worth of food to help the elf" << std::endl;
-    int num_turns = 10;
+    int num_turns = 20;
 
     while (playing) {
         std::cout << "You are currently at: " << *current_location << std::endl;
+        std::cout << "You have: " << num_turns << " turns left. " <<std::endl;
         std::cout << "What is your command? " << std::endl;
         std::string input;
 
