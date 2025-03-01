@@ -294,7 +294,7 @@ void Game::Eat(std::vector<std::string> target) {
         std::cout << "You ate the " << it->GetName() << ".\n";
         items.erase(it);
     } else {
-        std::cout << "That item is not edible.\n";
+        std::cout << "That item is not edible\n";
     }
 }
 
