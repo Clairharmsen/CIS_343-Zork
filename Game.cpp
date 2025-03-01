@@ -444,7 +444,7 @@ void Game::Play() {
 
         std::getline(std::cin, input);
 
-        input = LowerCase(input);
+        //input = LowerCase(input);
 
         // Split input into words
         std::vector<std::string> tokens = Split(input);
