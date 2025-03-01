@@ -19,12 +19,6 @@ Game::Game(){
     playing = true;
     current_location = RandomLocation();
 }
-//used ChatGPT to help with transform line
-std::string LowerCase(const std::string& input) {
-    std::string result = input;
-    std::transform(result.begin(), result.end(), result.begin(), ::tolower);
-    return result;
-}
 
 void Strip(std::string &word) {
     while (!word.empty() && word.back() == ' ') {
@@ -276,25 +270,34 @@ Location* Game::RandomLocation() {
 
 //Used ChatGPT to help with the finding item in inventory loop
 void Game::Eat(std::vector<std::string> target) {
-    std::string input;
-    std::cout << "What item would you like to eat?";
-    std::getline(std::cin, input);
+    if (target.empty()) {
+        std::cout << "What item would you like to eat?\n";
+        return;
+    }
+
+    std::string item_name = target[0];
 
     auto it = std::find_if(items.begin(), items.end(),
-        [&](const Item& item) { return item.GetName() == input; });
+        [&](const Item& item) { return item.GetName() == item_name; });
 
-    if (it != items.end()){
-        if (it->GetCalories() > 0) {
-            std::cout << "You ate the " << it->GetName() << "\n";
-            items.erase(it);
-            }
-        else {
-            std::cout << "That item is not edible\n";}
-            }
-    else {
-            std::cout << "You don't have that item\n";
+    if (it == items.end()) {
+        std::cout << "You don't have that item.\n";
+        return;
+    }
+
+    if (it->GetName() == "cake") {
+        std::cout << "How rude of you to eat the elf's cake. It killed you.\n";
+        playing = false;
+        return;
+    }
+    if (it->GetCalories() > 0) {
+        std::cout << "You ate the " << it->GetName() << ".\n";
+        items.erase(it);
+    } else {
+        std::cout << "That item is not edible.\n";
     }
 }
+
 
 
 //Used ChatGPT to help with the descriptions, separating the elements into regions and connecting the regions.
@@ -310,8 +313,8 @@ void Game::CreateWorld() {
     barista.SetMessage("Long line today, huh? Everyone wants their caffeine fix.");
     kirkhoff_center.add_npc(barista);
 
-    Item burrito("Burrito", "A warm, stuffed burrito with beans, rice, and meat.", 330, 2.7);
-    Item coffee("Coffee", "A hot cup of strong, black coffee.", 50, 0.25);
+    Item burrito("burrito", "A warm, stuffed burrito with beans, rice, and meat.", 330, 2.7);
+    Item coffee("coffee", "A hot cup of strong, black coffee.", 50, 0.25);
     kirkhoff_center.add_item(burrito);
     kirkhoff_center.add_item(coffee);
 
@@ -325,7 +328,7 @@ void Game::CreateWorld() {
     teacher.SetMessage("Need help with your project? Office hours are on Tuesdays.");
     mackinac_hall.add_npc(teacher);
 
-    Item apple("Apple", "A fresh, crisp apple.", 100, 1.5);
+    Item apple("apple", "A fresh, crisp apple.", 100, 1.5);
     mackinac_hall.add_item(apple);
 
     // ====================== REC CENTER ======================
@@ -338,21 +341,21 @@ void Game::CreateWorld() {
     athlete.SetMessage("I benched 225 today! How about you?");
     rec_center.add_npc(athlete);
 
-    Item weight("Dumbbell", "A heavy dumbbell used for strength training", 0, 12);
+    Item weight("dumbbell", "A heavy dumbbell used for strength training", 0, 12);
     rec_center.add_item(weight);
 
     // ====================== BLUE CONNECTION ======================
     Location blue_connection("Blue Connection", "A dining area helpful for late night snacks.");
 
-    Item chicken("GrilledChicken", "A well-seasoned grilled chicken breast.", 420, 5.5);
-    Item chips("Chips", "A bag of salty, crunchy potato chips.", 320, 0.5);
+    Item chicken("grilled chicken", "A well-seasoned grilled chicken breast.", 420, 5.5);
+    Item chips("chips", "A bag of salty, crunchy potato chips.", 320, 0.5);
     blue_connection.add_item(chicken);
     blue_connection.add_item(chips);
 
     // ====================== KLEINER ======================
     Location kleiner("Kleiner", "A smaller dining hall and study space");
 
-    Item book("Textbook", "A heavy textbook full of knowledge.", 0, 8.5);
+    Item book("textbook", "A heavy textbook full of knowledge.", 0, 8.5);
     kleiner.add_item(book);
 
     // ====================== CALDER HALL ======================
@@ -367,7 +370,7 @@ void Game::CreateWorld() {
     // ====================== MANITOU HALL ======================
     Location manitou_hall("Manitou Hall", "An academic building with a large computer lab.");
 
-    Item computer("Laptop", "A high-end laptop used for coding and assignments.", 0, 24.5);
+    Item computer("laptop", "A high-end laptop used for coding and assignments.", 0, 24.5);
     manitou_hall.add_item(computer);
 
     // ====================== FRESH ======================
@@ -379,8 +382,8 @@ void Game::CreateWorld() {
     chef.SetMessage("If you don’t like what’s on the menu, there’s always cereal.");
     fresh.add_npc(chef);
 
-    Item omelette("Omelette", "A freshly cooked omelette filled with vegetables and cheese.", 110, 2.5);
-    Item cake("Cake", "A sweet chocolate cake slice.", 350, 0.25);
+    Item omelette("omelette", "A freshly cooked omelette filled with vegetables and cheese.", 110, 2.5);
+    Item cake("cake", "A sweet chocolate cake slice.", 350, 0.25);
     fresh.add_item(omelette);
     fresh.add_item(cake);
 
@@ -443,8 +446,6 @@ void Game::Play() {
         std::string input;
 
         std::getline(std::cin, input);
-
-        input = LowerCase(input);
 
         // Split input into words
         std::vector<std::string> tokens = Split(input);
