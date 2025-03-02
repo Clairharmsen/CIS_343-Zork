@@ -7,7 +7,13 @@
 #include <iostream>
 #include <string>
 
-
+/**
+ * Item Constructor
+ * Takes a string for the name and description, an int for the calories, and a float for the weight
+ * Throws exceptions for names and descriptions being empty.
+ * Throws exceptions for calories and weight being out of range.
+ * Creates an item with the given inputs.
+ */
 Item::Item(const std::string& n, const std::string& d, int c, float w)
 {
     if (n.size() <= 0) {
@@ -30,6 +36,12 @@ Item::Item(const std::string& n, const std::string& d, int c, float w)
     weight = w;
 }
 
+/**
+ * Item Overloaded Output Operator
+ * @param output Ostream to store the output
+ * @param item the item with the information to be sent to the output
+ * @return An output stream formated with the item's information.
+ */
 std::ostream & operator <<(std::ostream & output, const Item & item)
 {
     output << item.GetName() << " (" << item.GetCalories() << " calories) - " << item.GetWeight() << " lb - " << item.GetDescription() << "\n";

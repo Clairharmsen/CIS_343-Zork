@@ -12,18 +12,31 @@
 #include <cstdlib>
 #include <string>
 
-
+/**
+ * Game Constructor
+ * Sets the game up
+ */
 Game::Game(){
+    // Sets up the commands of the game
     commands = SetupCommands();
+    // Creates the game world
     CreateWorld();
+    // Sets the games status as playing
     playing = true;
+    // Sets the current location to a random location
     current_location = RandomLocation();
 }
 
+/**
+ * Removes any whitespace from a word to prevent string reading issues
+ * @param word The word to remove space from
+ */
 void Strip(std::string &word) {
+    // If there is whitespace at the end of the string continuously remove it
     while (!word.empty() && word.back() == ' ') {
         word.pop_back();
     }
+    // If there is whitespace at the front of a string continuously remove it
     while (!word.empty() && word.front() == ' ') {
         word.erase(word.begin());
     }
@@ -94,11 +107,20 @@ void Game::Meet(std::vector<std::string> target) {
     std::cout << "************************ END OF TURN ********************************** \n" << std::endl;
 }
 
+/**
+ * This function gives the elf an item
+ * If the item is a food, the elf will eat the item and the calories needed to win will decrease
+ * If the item is not a food, the elf will get mad and send you to a random location
+ * @param target The item to give the elf
+ */
 void Game::Give(std::vector<std::string> target) {
+    // Iterator that looks through the list of items in the game for the item to give the elf.
     auto it = std::find_if(items.begin(), items.end(),
         [&](const Item& item) { return item.GetName() == target[0]; });
 
     if (it != items.end()){
+        // If the item is edible, the players weight and the calories needed will decrease
+        // The item will then be removed from the player's inventory
         if (it->GetCalories() > 0) {
             calories_needed -= it->GetCalories();
             player_weight -= it->GetCalories();
@@ -108,6 +130,7 @@ void Game::Give(std::vector<std::string> target) {
             items.erase(it);
         }
         else {
+            // If the item isn't edible, the elf will get angry and send you to a different location
             std::cout << "That item is not edible\n";
             std::cout << "The elf got angry and sent you to a different place.\n";
             std::cout << "************************ END OF TURN ********************************** \n" << std::endl;
@@ -115,50 +138,65 @@ void Game::Give(std::vector<std::string> target) {
         }
     }
     else {
+        // If you don't have the item, this indicates that.
         std::cout << "You don't have that item\n";
         std::cout << "************************ END OF TURN ********************************** \n" << std::endl;
     }
 }
 
-
-
-
+/**
+ * A function to show information on where the player is in the game.
+ * @param target this target is not used, because the function does not require it
+ */
 void Game::Look(std::vector<std::string> target) {
-    std::cout << "You are currently at: " << *current_location << std::endl;
+    std::cout << "You are in: " << *current_location << std::endl;
+    // Gets the NPCs in the location
     std::vector<NPC> npcs = current_location->get_npcs();
+    // Gets the items in the location
     std::vector<Item> items = current_location->get_items();
 
+    // Output the player is alone if there are no NPCs in the area
     if(npcs.empty()){
         std::cout << "You are alone.\n";
         return;}
 
+    // Show the NPCs in the area
     std::cout << "You see the following people\n";
     for (const auto& npc : npcs){
         std::cout << npc.GetName() << "\n";
     }
 
+    // Output there are no items in the area if there are none
     if(items.empty()){
         std::cout << "The room has no items to grab.\n";
         return;}
 
+    // Display the items in the area
     std::cout << "You see the following items\n";
     for (const auto& it : items){
         std::cout << it.GetName() << "\n";
     }
 
+    // Get the neighboring areas to your current location
     const std::map<std::string, Location*>& neighbors = current_location->get_locations();
 
     std::cout << "You can go in the following directions:\n";
+    // Display the neighboring areas
     for (const auto& entry : neighbors) {
         std::string direction = entry.first;
+        Location* neighbor = entry.second;
 
         // Check if location has been visited before
-        if (entry.second->get_visited()) {
-            std::cout << "- " << direction << " (" << entry.first << ")\n";
-        } else {
+        // If it has display the direction and display the name
+        if (neighbor->get_visited()) {
+            std::cout << "- " << direction << " (" << neighbor->GetName() << ")\n";
+        }
+        // If it hasn't just indicate the direction
+        else {
             std::cout << "- " << direction << "\n";
         }
     }
+    std::cout << "********************** END OF TURN ********************************** \n" << std::endl;
 }
 
 void Game::Quit(std::vector<std::string> target) {
@@ -166,13 +204,19 @@ void Game::Quit(std::vector<std::string> target) {
     playing = false;
 }
 
+/**
+ * Takes the item at the location you're at
+ * @param target The item to take.
+ */
 void Game::Take(std::vector<std::string> target) {
+    // If the string is empty, indicate it has to have something in it.
     if (target.empty()) {
         std::cout << "Take what?\n";
         return;
     }
 
-    std::string item_name = target[0]; // Assumes the item name is a single word
+    std::string item_name = target[0];
+    // Remove whitespace from the item
     Strip(item_name);
 
     // Get a reference to the location's item list
@@ -215,18 +259,26 @@ void Game::ShowItem(std::vector<std::string> target) {
 
 }
 
+/**
+ * Removes an item from the inventory
+ * Leaves the item at the current location
+ * @param target The item to remove
+ */
 void Game::Drop(std::vector<std::string> target){
+    // Indicate the player has no items to drop
     if (items.empty()) {
         std::cout << "You have no items to drop. \n";
         return;
     }
 
-    if (target.empty()) {  // Check if an item name was provided
+    // Check if an item name was provided
+    if (target.empty()) {
         std::cout << "Drop what?\n";
         return;
     }
 
-    std::string item_name = target[0]; // Assumes the item name is a single word
+    std::string item_name = target[0];
+    // Removes whitespace from item
     Strip(item_name);
 
     // Get a reference to the location's item list
@@ -251,6 +303,10 @@ void Game::Drop(std::vector<std::string> target){
 
 
 // Used ChatGPT to help with the show commands function
+/**
+ * Sets up the game's commands
+ * @return The map of the commands the game uses
+ */
 std::map<std::string, std::function<void(std::vector<std::string>)>> Game::SetupCommands() {
     std::map<std::string, std::function<void(std::vector<std::string>)>> all_commands;
     all_commands["help"] = [this](std::vector<std::string> args) { ShowHelp(); };
@@ -307,8 +363,9 @@ void Game::Eat(std::vector<std::string> target) {
     }
 }
 
-
-
+/**
+ * Sets the games locations, items, and npcs up.
+ */
 //Used ChatGPT to help with the descriptions, separating the elements into regions and connecting the regions.
 //Descriptions were proofread for accuracy.
 void Game::CreateWorld() {
@@ -397,6 +454,7 @@ void Game::CreateWorld() {
     fresh.add_item(cake);
 
     // ====================== LOCATION CONNECTIONS ======================
+    // Connects the locations to their neighbors
     kirkhoff_center.add_location("south", &calder_hall);
     kirkhoff_center.add_location("east", &blue_connection);
     kirkhoff_center.add_location("west", &mackinac_hall);
@@ -442,13 +500,17 @@ std::vector < std::string > Split(std::string text) {
     return sentence_split;
 }
 
+/**
+ * Plays the game
+ */
 void Game::Play() {
     std::cout << "Welcome to Grand Valley's Zork Experience" << std::endl;
     std::cout << "Your goal is to gather enough food to feed an elf in need." << std::endl;
     std::cout << "You have 10 turns to do so" << std::endl;
-    std::cout << "You must explore the campus and gather 500 calories worth of food to help the elf" << std::endl;
+    std::cout << "You must explore the campus and gather 500 calories worth of food to help the elf \n" << std::endl;
     int num_turns = 20;
 
+    // Main game loop
     while (playing) {
         std::cout << "You are currently at: " << *current_location << std::endl;
         std::cout << "You have: " << num_turns << " turns left. " <<std::endl;
