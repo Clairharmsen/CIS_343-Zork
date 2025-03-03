@@ -1,7 +1,9 @@
 //
 // Ezekiel Turnbough
-// ADD YOUR NAME
+// Clair Harmsen
+// 2/17/2025
 //
+
 #include "Item.hpp"
 
 #include <iostream>
