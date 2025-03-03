@@ -44,12 +44,19 @@ void Strip(std::string &word) {
 
 
 //Used ChatGPT to help with the show time part
+/*
+ *function that shows a help menu for a player
+ */
 void Game::ShowHelp() {
+    // sets current time to nullpointer
     std::time_t now = std::time(nullptr);
+    // sets local time to the current time
     std::tm* local_time = std::localtime(&now);
 
+    // outputs the current time in 12 hour format
     std::cout << "\nCurrent time: " << std::put_time(local_time, "%I:%M:%S %p") << std::endl;
 
+    // prints help menu
     std::cout << "======Help Menu======\n";
     std::cout << "Goal of the game:\n You need to bring 500 calories of edible food\n" <<
     "to the elf in the woods behind campus. Once the elf has 500 calories of edible food it will save campus\n" <<
@@ -57,34 +64,48 @@ void Game::ShowHelp() {
 
     std::cout << "You may use the following commands:\n";
 
+    // iterates through the lost of commands and prints
     for (const auto& command : commands){
         std::cout << command.first << "\n";
     }
 }
 
-//Clair
+/*
+ *function to move players to different directions on the map
+ * checks if location exsists or if player is carrying too much weight
+ * @param target the name of a location
+ * returns location after moving
+ */
 void Game::Go(std::vector<std::string> target) {
+    // if there is no input ask for location again
     if (target.empty()){
       std::cout << "Where would you like to go?\n";
       return;
     }
 
+    // sets the direction to the first word inputted
     std::string direction = target[0];
 
+    // checks if a players is carrying to much weight to move
     if (player_weight > 30){
       std::cout << "You cannot move when you are carrying more than 30 pounds\n";
       return;
     }
 
+    // looks at map of locations and sets curr loc to the location in the direction the player wants to go
     std::map<std::string, Location*> neighbors = current_location->get_locations();
 
+    // moves player to location at specified location
     if (neighbors.find(direction) != neighbors.end()){
+      // finds neighbors of current location
       current_location =  neighbors[direction];
 
+      // sets current location to visited being True
       current_location->set_visited();
 
       std::cout << "You are now at: " << *current_location << "\n";
     }
+    // if location is not avalible to move prints message
     else {
       std::cout << "You cannot move in that direction\n";
       }
@@ -92,15 +113,22 @@ void Game::Go(std::vector<std::string> target) {
 }
 
 
-//Clair
+/*
+ *funtion prints description of a NPC at a location
+ * @param target the npc to talk to
+ */
 void Game::Meet(std::vector<std::string> target) {
+  // gets the NPCs at the current location
   std::vector<NPC> npcs = current_location->get_npcs();
 
+  // if there are no NPCs cant get any description
   if(npcs.empty()){
     std::cout << "There is no one else here\n";
   return;}
 
   std::cout << "You see the following person\n";
+
+  // iterates through list of NPCs and prints name and description
   for (const auto& npc : npcs){
     std::cout << npc.GetName() << " - " << npc.GetDescription() << "\n";
   }
@@ -199,7 +227,12 @@ void Game::Look(std::vector<std::string> target) {
     std::cout << "********************** END OF TURN ********************************** \n" << std::endl;
 }
 
+/*
+ * function that allows the player to quit the game
+ * @param target players input
+ */
 void Game::Quit(std::vector<std::string> target) {
+    // if player inputs quit command outputs thank you message and ends game
     std::cout << "Thanks for playing!\n";
     playing = false;
 }
@@ -238,19 +271,27 @@ void Game::Take(std::vector<std::string> target) {
         }
     }
 }
-//Clair
+/*
+ * function that shows the items a player is holding
+ *  @param target the vector of items a players is holding
+ */
 void Game::ShowItem(std::vector<std::string> target) {
     std::cout << "You are carrying the following items:\n";
 
+    // if vector of items is empty print empty message
     if (items.empty()) {
         std::cout << "You have no items\n";
         return;
     }
+    // iterates through vector of items player is hold and prints name and weight
     for (const auto& item : items) {
         std::cout << item.GetName() << ", weight: " << item.GetWeight() << "\n";
     }
 
+    // sets total weight to zero
     float total_weight = 0;
+
+    // iterates through list of items and totals their weight
     for (const auto& item : items) {
         total_weight += item.GetWeight();
     }
@@ -323,38 +364,55 @@ std::map<std::string, std::function<void(std::vector<std::string>)>> Game::Setup
 }
 
 //Used Chatgpt to help with random seeding logic
+/*
+ * function that moves a player to a random location
+ */
 Location* Game::RandomLocation() {
+  // sets seeded to false
   static bool seeded = false;
+
+  //
   if (!seeded){
     std::srand(std::time(nullptr));
     seeded = true;
   }
+    // takes random index calculated from dividing seed by locations size and sets current location to a random one
     int random_index = std::rand() % locations.size();
     return &locations[random_index];
 }
 
-//Used ChatGPT to help with the finding item in inventory loop
+/*
+ *function that allows a player to eat an item if edible
+ * @param target the item the player is trying to eat
+ */
 void Game::Eat(std::vector<std::string> target) {
+    // if no item is inputted prompts for an item
     if (target.empty()) {
         std::cout << "What item would you like to eat?\n";
         return;
     }
 
+    // sets item name to the first word in input
     std::string item_name = target[0];
 
+    // iterates through list of items and gets the names
     auto it = std::find_if(items.begin(), items.end(),
         [&](const Item& item) { return item.GetName() == item_name; });
 
+    // if item is not being held by player
     if (it == items.end()) {
         std::cout << "You don't have that item.\n";
         return;
     }
 
+    // if the item is cake prints message and ends the game
     if (it->GetName() == "cake") {
         std::cout << "How rude of you to eat the elf's cake. It killed you.\n";
         playing = false;
         return;
     }
+
+    // checks if an item is edible and then deletes it from the vector of items being held
     if (it->GetCalories() > 0) {
         std::cout << "You ate the " << it->GetName() << ".\n";
         items.erase(it);
